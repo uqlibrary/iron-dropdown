@@ -14,10 +14,10 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/uqlibrary-iron-dropdown"
+    "url": "git://github.com/uqlibrary/uqlibrary-iron-dropdown"
   },
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/PolymerElements/uqlibrary-iron-dropdown",
+  "homepage": "https://github.com/uqlibrary/uqlibrary-iron-dropdown",
   "dependencies": {
     "polymer": "polymer/polymer#^1.0.0",
     "iron-behaviors": "polymerelements/iron-behaviors#^1.0.0",
