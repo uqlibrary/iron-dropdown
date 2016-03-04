@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../iron-dropdown.html">
+<link rel="import" href="../uqlibrary-iron-dropdown.html">
 <link rel="import" href="../../neon-animation/neon-animations.html">
 <link rel="import" href="grow-height-animation.html">
 
@@ -23,14 +23,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div on-tap="open">
       <content select=".dropdown-trigger"></content>
     </div>
-    <iron-dropdown id="dropdown"
+    <uqlibrary-iron-dropdown id="dropdown"
       vertical-align="[[verticalAlign]]"
       horizontal-align="[[horizontalAlign]]"
       disabled="[[disabled]]"
+      position-absolute="[[positionAbsolute]]"
       open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]">
       <content select=".dropdown-content"></content>
-    </iron-dropdown>
+    </uqlibrary-iron-dropdown>
   </template>
   <script>
     Polymer({
@@ -40,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         verticalAlign: String,
         horizontalAlign: String,
         disabled: Boolean,
+        positionAbsolute: Boolean,
         openAnimationConfig: {
           type: Array,
           value: function() {
@@ -69,6 +71,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }
             }];
           }
+        }
+      },
+      ready: function () {
+        if (this.positionAbsolute) {
+          this.style.position = 'relative';
         }
       },
 

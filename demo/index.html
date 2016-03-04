@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
 
-  <title>iron-dropdown</title>
+  <title>uqlibrary-iron-dropdown</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../iron-image/iron-image.html">
@@ -29,6 +29,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .random-content {
       padding: 1.5em 2em;
       max-width: 250px;
+    }
+
+    .absolute-box {
+        width: 150px;
+        padding: 10px;
+        border: 1px solid #ccc;
     }
 
     button {
@@ -82,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
   <template is="dom-bind" id="Demo">
    <div class="vertical-section vertical-section-container ">
-      <h1>iron-dropdown</h1>
+      <h1>uqlibrary-iron-dropdown</h1>
       <p>Examples of vanilla elements.</p>
       <div>
         <x-select>
@@ -123,6 +129,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </ul>
         </x-select>
       </div>
+       <div>
+           <x-select position-absolute="true">
+               <button class="dropdown-trigger">Basic Positioned Absolute</button>
+               <div class="dropdown-content absolute-box">
+                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               </div>
+           </x-select>
+           <x-select position-absolute="true" vertical-align="bottom">
+               <button class="dropdown-trigger">Positioned Absolute Bottom Aligned</button>
+               <div class="dropdown-content absolute-box">
+                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               </div>
+           </x-select>
+           <x-select position-absolute="true" horizontal-align="right">
+               <button class="dropdown-trigger">Positioned Absolute Right Aligned</button>
+               <div class="dropdown-content absolute-box">
+                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               </div>
+           </x-select>
+       </div>
+
+       <div style="height: 800px"></div>
+       Forced Scrolling
     </div>
   </template>
 

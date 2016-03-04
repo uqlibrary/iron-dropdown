@@ -15,26 +15,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
 <link rel="import" href="../neon-animation/animations/opaque-animation.html">
-<link rel="import" href="iron-dropdown-scroll-manager.html">
+<link rel="import" href="uqlibrary-iron-dropdown-scroll-manager.html">
 
 <!--
-`<iron-dropdown>` is a generalized element that is useful when you have
+`<uqlibrary-iron-dropdown>` is a generalized element that is useful when you have
 hidden content (`.dropdown-content`) that is revealed due to some change in
 state that should cause it to do so.
 
 Note that this is a low-level element intended to be used as part of other
 composite elements that cause dropdowns to be revealed.
 
-Examples of elements that might be implemented using an `iron-dropdown`
+Examples of elements that might be implemented using an `uqlibrary-iron-dropdown`
 include comboboxes, menubuttons, selects. The list goes on.
 
-The `<iron-dropdown>` element exposes attributes that allow the position
+The `<uqlibrary-iron-dropdown>` element exposes attributes that allow the position
 of the `.dropdown-content` relative to the `.dropdown-trigger` to be
 configured.
 
-    <iron-dropdown horizontal-align="right" vertical-align="top">
+    <uqlibrary-iron-dropdown horizontal-align="right" vertical-align="top">
       <div class="dropdown-content">Hello!</div>
-    </iron-dropdown>
+    </uqlibrary-iron-dropdown>
 
 In the above example, the `<div>` with class `.dropdown-content` will be
 hidden until the dropdown element has `opened` set to true, or when the `open`
@@ -43,7 +43,7 @@ method is called on the element.
 @demo demo/index.html
 -->
 
-<dom-module id="iron-dropdown">
+<dom-module id="uqlibrary-iron-dropdown">
   <style>
     :host {
       position: fixed;
@@ -64,11 +64,11 @@ method is called on the element.
   </template>
 
   <script>
-    (function() {
+    (function () {
       'use strict';
 
       Polymer({
-        is: 'iron-dropdown',
+        is: 'uqlibrary-iron-dropdown',
 
         behaviors: [
           Polymer.IronControlState,
@@ -96,6 +96,15 @@ method is called on the element.
             type: String,
             value: 'top',
             reflectToAttribute: true
+          },
+
+          /**
+           * Determines whether the dropdown is position 'absolute' or 'fixed'.
+           * Position absolute requires a position 'relative' parent
+           */
+          positionAbsolute: {
+            type: Boolean,
+            value: false
           },
 
           /**
@@ -209,7 +218,7 @@ method is called on the element.
           '_updateOverlayPosition(verticalAlign, horizontalAlign, verticalOffset, horizontalOffset)'
         ],
 
-        attached: function() {
+        attached: function () {
           if (this.positionTarget === undefined) {
             this.positionTarget = this._defaultPositionTarget;
           }
@@ -233,7 +242,7 @@ method is called on the element.
         /**
          * Whether the text direction is RTL
          */
-        _isRTL: function() {
+        _isRTL: function () {
           return window.getComputedStyle(this).direction == 'rtl';
         },
 
@@ -270,11 +279,16 @@ method is called on the element.
 
           // In RTL, the direction flips, so what is "right" in LTR becomes "left".
           var isRTL = this._isRTL();
-          if ((!isRTL && this.horizontalAlign === 'right') ||
-              (isRTL && this.horizontalAlign === 'left')) {
-            target = document.documentElement.clientWidth - this._positionRect.right;
+
+          if (this.positionAbsolute) {
+            target = 0;
           } else {
-            target = this._positionRect.left;
+            if ((!isRTL && this.horizontalAlign === 'right') ||
+              (isRTL && this.horizontalAlign === 'left')) {
+              target = document.documentElement.clientWidth - this._positionRect.right;
+            } else {
+              target = this._positionRect.left;
+            }
           }
 
           target += this.horizontalOffset;
@@ -288,10 +302,14 @@ method is called on the element.
         get _verticalAlignTargetValue() {
           var target;
 
-          if (this.verticalAlign === 'bottom') {
-            target = document.documentElement.clientHeight - this._positionRect.bottom;
+          if (this.positionAbsolute) {
+            target = 0;
           } else {
-            target = this._positionRect.top;
+            if (this.verticalAlign === 'bottom') {
+              target = document.documentElement.clientHeight - this._positionRect.bottom;
+            } else {
+              target = this._positionRect.top;
+            }
           }
 
           target += this.verticalOffset;
@@ -316,7 +334,7 @@ method is called on the element.
          *
          * @param {boolean} opened True if the dropdown is opened.
          */
-        _openedChanged: function(opened) {
+        _openedChanged: function (opened) {
           if (opened && this.disabled) {
             this.cancel();
           } else {
@@ -329,8 +347,8 @@ method is called on the element.
         /**
          * Overridden from `IronOverlayBehavior`.
          */
-        _renderOpened: function() {
-          if (!this.allowOutsideScroll) {
+        _renderOpened: function () {
+          if (!this.allowOutsideScroll && !this.positionAbsolute) {
             Polymer.IronDropdownScrollManager.pushScrollLock(this);
           }
 
@@ -345,7 +363,7 @@ method is called on the element.
         /**
          * Overridden from `IronOverlayBehavior`.
          */
-        _renderClosed: function() {
+        _renderClosed: function () {
           Polymer.IronDropdownScrollManager.removeScrollLock(this);
           if (!this.noAnimations && this.animationConfig && this.animationConfig.close) {
             this.$.contentWrapper.classList.add('animating');
@@ -354,14 +372,13 @@ method is called on the element.
             Polymer.IronOverlayBehaviorImpl._renderClosed.apply(this, arguments);
           }
         },
-
         /**
          * Called when animation finishes on the dropdown (when opening or
          * closing). Responsible for "completing" the process of opening or
          * closing the dropdown by positioning it or setting its display to
          * none.
          */
-        _onNeonAnimationFinish: function() {
+        _onNeonAnimationFinish: function () {
           this.$.contentWrapper.classList.remove('animating');
           if (this.opened) {
             Polymer.IronOverlayBehaviorImpl._renderOpened.apply(this);
@@ -373,7 +390,7 @@ method is called on the element.
         /**
          * Called when an `iron-resize` event fires.
          */
-        _onIronResize: function() {
+        _onIronResize: function () {
           var containedElement = this.containedElement;
           var scrollTop;
           var scrollLeft;
@@ -398,7 +415,7 @@ method is called on the element.
         /**
          * Called when the `positionTarget` property changes.
          */
-        _positionTargetChanged: function() {
+        _positionTargetChanged: function () {
           this._updateOverlayPosition();
         },
 
@@ -406,7 +423,7 @@ method is called on the element.
          * Constructs the final animation config from different properties used
          * to configure specific parts of the opening and closing animations.
          */
-        _updateAnimationConfig: function() {
+        _updateAnimationConfig: function () {
           var animationConfig = {};
           var animations = [];
 
@@ -426,7 +443,7 @@ method is called on the element.
             animations = animations.concat(animationConfig.close);
           }
 
-          animations.forEach(function(animation) {
+          animations.forEach(function (animation) {
             animation.node = this.containedElement;
           }, this);
 
@@ -437,7 +454,7 @@ method is called on the element.
          * Prepares the dropdown for opening by updating measured layout
          * values.
          */
-        _prepareDropdown: function() {
+        _prepareDropdown: function () {
           this.sizingTarget = this.containedElement || this.sizingTarget;
           this._updateAnimationConfig();
           this._updateOverlayPosition();
@@ -448,11 +465,15 @@ method is called on the element.
          * and vertical alignment, and re-memoizes these values for the sake
          * of behavior in `IronFitBehavior`.
          */
-        _updateOverlayPosition: function() {
+        _updateOverlayPosition: function () {
           this._positionRectMemo = null;
 
           if (!this.positionTarget) {
             return;
+          }
+
+          if (this.positionAbsolute) {
+            this.style.position = "absolute";
           }
 
           this.style[this._localeHorizontalAlign] =
