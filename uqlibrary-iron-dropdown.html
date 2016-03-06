@@ -293,7 +293,7 @@ method is called on the element.
 
           target += this.horizontalOffset;
 
-          return Math.max(target, 0);
+          return (this.positionAbsolute ? target : Math.max(target, 0));
         },
 
         /**
