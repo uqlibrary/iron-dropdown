@@ -219,9 +219,9 @@ method is called on the element.
         ],
 
         attached: function () {
-          if (this.positionTarget === undefined) {
-            this.positionTarget = this._defaultPositionTarget;
-          }
+          // Memoize this to avoid expensive calculations & relayouts.
+          this._isRTL = window.getComputedStyle(this).direction == 'rtl';
+          this.positionTarget = this.positionTarget || this._defaultPositionTarget;
         },
 
         /**
@@ -278,7 +278,7 @@ method is called on the element.
           var target;
 
           // In RTL, the direction flips, so what is "right" in LTR becomes "left".
-          var isRTL = this._isRTL();
+          var isRTL = this._isRTL;
 
           if (this.positionAbsolute) {
             target = 0;
@@ -322,7 +322,7 @@ method is called on the element.
          */
         get _localeHorizontalAlign() {
           // In RTL, "left" becomes "right".
-          if (this._isRTL()) {
+          if (this._isRTL) {
             return this.horizontalAlign === 'right' ? 'left' : 'right';
           } else {
             return this.horizontalAlign;
