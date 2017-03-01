@@ -218,9 +218,13 @@ method is called on the element.
                     '_updateOverlayPosition(verticalAlign, horizontalAlign, verticalOffset, horizontalOffset)'
                 ],
 
+                rtlCalculated: false,
+
+                isRTL: false,
+
                 attached: function () {
                     // Memoize this to avoid expensive calculations & relayouts.
-                    this._isRTL = window.getComputedStyle(this).direction == 'rtl';
+                    this.isRTL = this.rtlCalculated ? this.isRTL : this._isRTL;
                     this.positionTarget = this.positionTarget || this._defaultPositionTarget;
                 },
 
@@ -242,7 +246,8 @@ method is called on the element.
                 /**
                  * Whether the text direction is RTL
                  */
-                _isRTL: function () {
+                get _isRTL() {
+                    this.rtlCalculated = true;
                     return window.getComputedStyle(this).direction == 'rtl';
                 },
 
@@ -277,14 +282,11 @@ method is called on the element.
                 get _horizontalAlignTargetValue() {
                     var target;
 
-                    // In RTL, the direction flips, so what is "right" in LTR becomes "left".
-                    var isRTL = this._isRTL;
-
                     if (this.positionAbsolute) {
                         target = 0;
                     } else {
-                        if ((!isRTL && this.horizontalAlign === 'right') ||
-                            (isRTL && this.horizontalAlign === 'left')) {
+                        if ((!this.isRTL && this.horizontalAlign === 'right') ||
+                            (this.isRTL && this.horizontalAlign === 'left')) {
                             target = document.documentElement.clientWidth - this._positionRect.right;
                         } else {
                             target = this._positionRect.left;
@@ -322,7 +324,7 @@ method is called on the element.
                  */
                 get _localeHorizontalAlign() {
                     // In RTL, "left" becomes "right".
-                    if (this._isRTL) {
+                    if (this.isRTL) {
                         return this.horizontalAlign === 'right' ? 'left' : 'right';
                     } else {
                         return this.horizontalAlign;
