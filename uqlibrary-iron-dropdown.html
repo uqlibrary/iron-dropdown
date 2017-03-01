@@ -218,13 +218,11 @@ method is called on the element.
                     '_updateOverlayPosition(verticalAlign, horizontalAlign, verticalOffset, horizontalOffset)'
                 ],
 
-                rtlCalculated: false,
-
                 isRTL: false,
 
                 attached: function () {
                     // Memoize this to avoid expensive calculations & relayouts.
-                    this.isRTL = this.rtlCalculated ? this.isRTL : this._isRTL;
+                    this.isRTL = this.isRTL || this._isRTL;
                     this.positionTarget = this.positionTarget || this._defaultPositionTarget;
                 },
 
@@ -247,7 +245,6 @@ method is called on the element.
                  * Whether the text direction is RTL
                  */
                 get _isRTL() {
-                    this.rtlCalculated = true;
                     return window.getComputedStyle(this).direction == 'rtl';
                 },
 
