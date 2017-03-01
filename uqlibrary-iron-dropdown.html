@@ -224,6 +224,7 @@ method is called on the element.
                     // Memoize this to avoid expensive calculations & relayouts.
                     this.isRTL = this.isRTL || this._isRTL;
                     this.positionTarget = this.positionTarget || this._defaultPositionTarget;
+
                     window.addEventListener('resize', function() {
                         this.cancel();
                     }.bind(this));
@@ -493,6 +494,8 @@ method is called on the element.
 
                         this._fitInfo.inlineStyle[this.verticalAlign] =
                             this.style[this.verticalAlign];
+
+                        this.sizingTarget.style.maxWidth = (parseInt(this.containedElement.style.maxWidth) + 30) + "px";
                     }
                 },
 
