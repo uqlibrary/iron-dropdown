@@ -44,20 +44,20 @@ method is called on the element.
 -->
 
 <dom-module id="uqlibrary-iron-dropdown">
-    <style>
-        :host {
-            position: fixed;
-        }
+  <template>
+      <style>
+          :host {
+              position: fixed;
+          }
 
-        #contentWrapper ::content > * {
-            overflow: auto;
-        }
+          #contentWrapper ::content > * {
+              overflow: auto;
+          }
 
-        #contentWrapper.animating ::content > * {
-            overflow: hidden;
-        }
-    </style>
-    <template>
+          #contentWrapper.animating ::content > * {
+              overflow: hidden;
+          }
+      </style>
         <div id="contentWrapper">
             <content id="content" select=".dropdown-content"></content>
         </div>
